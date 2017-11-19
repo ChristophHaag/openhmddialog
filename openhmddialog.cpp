@@ -16,6 +16,12 @@ struct my_nkc_app {
 
 	/* some user data */
 	int value;
+	int hmd;
+	int hmdtracker;
+	int leftcontroller;
+	int leftcontrollertracker;
+	int rightcontroller;
+	int rightcontrollertracker;
 	int dev;
 };
 
@@ -29,7 +35,7 @@ void mainLoop(void* loopArg){
 	}
 
 	/* Nuklear GUI code */
-	if (nk_begin(ctx, "Show", nk_rect(0, 0, 800, 600), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
+	if (nk_begin(ctx, "HMDs", nk_rect(0, 0, 400, 200), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
 		nk_layout_row_dynamic(ctx, 30, 1);
 		for(int i = 0; i < num_devices; i++){
 			int device_class = 0, device_flags = 0;
@@ -53,9 +59,10 @@ void mainLoop(void* loopArg){
 			*/
 
 			//if (device_flags & OHMD_DEVICE_FLAGS_NULL_DEVICE) continue;
+			if (device_flags & (OHMD_DEVICE_FLAGS_LEFT_CONTROLLER | OHMD_DEVICE_FLAGS_RIGHT_CONTROLLER)) continue;
 			char entry[1000];
 			sprintf(entry, "%d: %s %s %s", i, ohmd_list_gets(ohmdctx, i, OHMD_VENDOR), ohmd_list_gets(ohmdctx, i, OHMD_PRODUCT), ohmd_list_gets(ohmdctx, i, OHMD_PATH));
-			if (nk_option_label(ctx, entry, myapp->dev == i)) myapp->dev = i;
+			if (nk_option_label(ctx, entry, myapp->hmd == i)) myapp->hmd = i;
 		}
 
 
@@ -64,15 +71,51 @@ void mainLoop(void* loopArg){
 		//if (nk_option_label(ctx, "hard", myapp->op == HARD)) myapp->op = HARD;
 
 		/* fixed widget pixel width */
+		nk_end(ctx);
+
+	}
+
+	if (nk_begin(ctx, "Left Controller", nk_rect(0, 200, 400, 200), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
+		nk_layout_row_dynamic(ctx, 30, 1);
+		for(int i = 0; i < num_devices; i++){
+			int device_class = 0, device_flags = 0;
+			const char* device_class_s[] = {"HMD", "Controller", "Generic Tracker", "Unknown"};
+			ohmd_list_geti(ohmdctx, i, OHMD_DEVICE_CLASS, &device_class);
+			ohmd_list_geti(ohmdctx, i, OHMD_DEVICE_FLAGS, &device_flags);
+			if (!(device_flags & (OHMD_DEVICE_FLAGS_LEFT_CONTROLLER | OHMD_DEVICE_FLAGS_RIGHT_CONTROLLER))) continue;
+			char entry[1000];
+			sprintf(entry, "%d: %s %s %s", i, ohmd_list_gets(ohmdctx, i, OHMD_VENDOR), ohmd_list_gets(ohmdctx, i, OHMD_PRODUCT), ohmd_list_gets(ohmdctx, i, OHMD_PATH));
+			if (nk_option_label(ctx, entry, myapp->leftcontroller == i)) myapp->leftcontroller= i;
+		}
+		nk_end(ctx);
+	}
+
+	if (nk_begin(ctx, "Right Controller", nk_rect(0, 400, 400, 200), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
+		nk_layout_row_dynamic(ctx, 30, 1);
+		for(int i = 0; i < num_devices; i++){
+			int device_class = 0, device_flags = 0;
+			const char* device_class_s[] = {"HMD", "Controller", "Generic Tracker", "Unknown"};
+			ohmd_list_geti(ohmdctx, i, OHMD_DEVICE_CLASS, &device_class);
+			ohmd_list_geti(ohmdctx, i, OHMD_DEVICE_FLAGS, &device_flags);
+			if (!(device_flags & (OHMD_DEVICE_FLAGS_LEFT_CONTROLLER | OHMD_DEVICE_FLAGS_RIGHT_CONTROLLER))) continue;
+			char entry[1000];
+			sprintf(entry, "%d: %s %s %s", i, ohmd_list_gets(ohmdctx, i, OHMD_VENDOR), ohmd_list_gets(ohmdctx, i, OHMD_PRODUCT), ohmd_list_gets(ohmdctx, i, OHMD_PATH));
+			if (nk_option_label(ctx, entry, myapp->rightcontroller == i)) myapp->rightcontroller = i;
+		}
+		nk_end(ctx);
+	}
+
+
+	if (nk_begin(ctx, "Choose", nk_rect(400, 0, 150, 100), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
 		nk_layout_row_static(ctx, 30, 80, 1);
 		if (nk_button_label(ctx, "Choose")) {
 			/* event handling */
-// 			//printf("Button pressed\n");
+			// 			//printf("Button pressed\n");
 			myapp->value = myapp->dev;
 			nkc_stop_main_loop(myapp->nkcHandle);
 		}
+		nk_end(ctx);
 	}
-	nk_end(ctx);
 	/* End Nuklear GUI */
 
 	nkc_render(myapp->nkcHandle, nk_rgb(40,40,40) );
@@ -96,10 +139,9 @@ int test() {
 	struct nkc nkcx; /* Allocate memory for Nuklear+ handle */
 	myapp.nkcHandle = &nkcx;
 	/* init some user data */
-	myapp.value = 0;
-	myapp.dev = 0;
+	myapp.hmd = 0;
 
-	if( nkc_init( myapp.nkcHandle, WINDOWNAME, 640, 480, NKC_WIN_NORMAL ) ){
+	if( nkc_init( myapp.nkcHandle, WINDOWNAME, 600, 800, NKC_WIN_NORMAL ) ){
 		//printf("Successfull init. Starting 'infinite' main loop...\n");
 		nkc_set_main_loop(myapp.nkcHandle, mainLoop, (void*)&myapp );
 	} else {
@@ -107,5 +149,5 @@ int test() {
 	}
 	//printf("Value after quit = %d\n", myapp.value);
 	nkc_shutdown( myapp.nkcHandle );
-	return myapp.value;
+	return myapp.hmd;
 }
