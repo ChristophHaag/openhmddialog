@@ -96,6 +96,7 @@ void mainLoop(void* loopArg){
 			sprintf(entry, "%d: %s %s %s", i, ohmd_list_gets(ohmdctx, i, OHMD_VENDOR), ohmd_list_gets(ohmdctx, i, OHMD_PRODUCT), ohmd_list_gets(ohmdctx, i, OHMD_PATH));
 			if (nk_option_label(ctx, entry, myapp->leftcontroller == i)) myapp->leftcontroller= i;
 		}
+		if (nk_option_label(ctx, "None", myapp->leftcontroller == -1)) myapp->leftcontroller= -1;
 		nk_end(ctx);
 	}
 	if (true /*myapp->separate_leftcontrollertracker*/) {
@@ -132,6 +133,7 @@ void mainLoop(void* loopArg){
 			sprintf(entry, "%d: %s %s %s", i, ohmd_list_gets(ohmdctx, i, OHMD_VENDOR), ohmd_list_gets(ohmdctx, i, OHMD_PRODUCT), ohmd_list_gets(ohmdctx, i, OHMD_PATH));
 			if (nk_option_label(ctx, entry, myapp->rightcontroller == i)) myapp->rightcontroller = i;
 		}
+		if (nk_option_label(ctx, "None", myapp->rightcontroller == -1)) myapp->rightcontroller= -1;
 		nk_end(ctx);
 	}
 	if (true /*myapp->separate_rightcontrollertracker*/) {
