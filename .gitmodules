@@ -1,0 +1,15 @@
+[submodule "external/Boxer"]
+	path = external/Boxer
+	url = https://github.com/aaronmjacobs/Boxer.git
+[submodule "external/kiss_sdl"]
+	path = external/kiss_sdl
+	url = https://github.com/actsl/kiss_sdl.git
+[submodule "nuklear"]
+	path = nuklear
+	url = https://github.com/vurtun/nuklear.git
+[submodule "external/nuklear"]
+	path = external/nuklear
+	url = https://github.com/vurtun/nuklear.git
+[submodule "external/nuklear_cross"]
+	path = external/nuklear_cross
+	url = https://github.com/DeXP/nuklear_cross
