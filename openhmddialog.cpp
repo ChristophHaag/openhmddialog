@@ -44,7 +44,7 @@ void mainLoop(void* loopArg){
 	int currentwidth = totalwidth /2 /*myapp->separate_hmdtracker ? totalwidth / 2 : totalwidth*/;
 	if (nk_begin(ctx, "HMD", nk_rect(0, 0, currentwidth, partheight), NK_WINDOW_TITLE | NK_WINDOW_BORDER)) {
 		nk_layout_row_dynamic(ctx, textheight, 1);
-		nk_checkbox_label(ctx, "Use different tracker", &myapp->separate_hmdtracker);
+		nk_checkbox_label(ctx, "Use different HMD tracker", &myapp->has_separate_hmdtracker);
 		for(int i = 0; i < num_devices; i++){
 			int device_class = 0, device_flags = 0;
 			const char* device_class_s[] = {"HMD", "Controller", "Generic Tracker", "Unknown"};
@@ -85,7 +85,7 @@ void mainLoop(void* loopArg){
 	currentwidth = totalwidth /2 /*myapp->separate_leftcontrollertracker ? totalwidth / 2 : totalwidth*/;
 	if (nk_begin(ctx, "Left Controller", nk_rect(0, chooserheight/parts, currentwidth, partheight), NK_WINDOW_TITLE | NK_WINDOW_BORDER)) {
 		nk_layout_row_dynamic(ctx, textheight, 1);
-		nk_checkbox_label(ctx, "Use different tracker", &myapp->separate_leftcontrollertracker);
+		nk_checkbox_label(ctx, "Use different left controller tracker", &myapp->has_separate_leftcontrollertracker);
 		for(int i = 0; i < num_devices; i++){
 			int device_class = 0, device_flags = 0;
 			const char* device_class_s[] = {"HMD", "Controller", "Generic Tracker", "Unknown"};
@@ -122,7 +122,7 @@ void mainLoop(void* loopArg){
 	currentwidth = totalwidth /2 /*myapp->separate_rightcontrollertracker ? totalwidth / 2 : totalwidth*/;
 	if (nk_begin(ctx, "Right Controller", nk_rect(0, 2* chooserheight/parts, currentwidth, partheight), NK_WINDOW_TITLE | NK_WINDOW_BORDER)) {
 		nk_layout_row_dynamic(ctx, textheight, 1);
-		nk_checkbox_label(ctx, "Use different tracker", &myapp->separate_rightcontrollertracker);
+		nk_checkbox_label(ctx, "Use different right controller tracker", &myapp->has_separate_rightcontrollertracker);
 		for(int i = 0; i < num_devices; i++){
 			int device_class = 0, device_flags = 0;
 			const char* device_class_s[] = {"HMD", "Controller", "Generic Tracker", "Unknown"};
@@ -174,11 +174,11 @@ struct openhmdindex test() {
 	struct openhmdindex ret;
 	ret.hmd = 0;
 	ret.hmdtracker = -1;
-	ret.separate_hmdtracker = nk_false;
+	ret.has_separate_hmdtracker = nk_false;
 	ret.leftcontroller = 1;
 	ret.rightcontroller = 2;
-	ret.separate_leftcontrollertracker = nk_false;
-	ret.separate_rightcontrollertracker = nk_false;
+	ret.has_separate_leftcontrollertracker = nk_false;
+	ret.has_separate_rightcontrollertracker = nk_false;
 	ret.leftcontrollertracker = -1;
 	ret.rightcontrollertracker = -1;
 
